@@ -20,10 +20,11 @@ rm(list = ls())
 ## if not done before, install:
 # install.packages("repmis")
 # install.packages("rio")
+# install.packages("xlsx")
 
 library(repmis)
-# library(rio) (not used so far)
-
+library(rio)
+library(xlsx)
 
 # Set the working directory
 
@@ -58,8 +59,46 @@ rp16a <- read.csv('wahlnachtanalyse-lw2016_page_64.csv', header = FALSE, sep = '
 rp16b <- read.csv('wahlnachtanalyse-lw2016_page_65.csv', header = FALSE, sep = ';')
 
 # Saxony Anhalt 2016
-sa16 <- import('')
+sa16 <- read.csv('http://www.statistik.sachsen-anhalt.de/wahlen/lt16/erg/csv/lt16dat2.csv',
+                 sep = ';')
+
+# Bremen 2015
+br15 <- read.csv
+
+# Hamburg 2015
+ha15 <- read.csv
+
+# Brandenburg 2014
+bb14 <- source_XlsxData('https://www.statistik-berlin-brandenburg.de/Publikationen/Dowmies/BB_LT_2014_Wahlkreise_Endg_Ergebnis.xlsx', 
+                        2, cache = TRUE)
+## SHA-1 hash of the downloaded data file is: 'd017e1c2b9bf28227362978e41986a023f149237'
 
 
 
-View(bw16)
+# Saxony 2014
+sx14 <- read.csv
+
+# Thuringia 2014
+th14 <- read.csv
+
+# Hesse 2013
+## data available in compressed format
+
+# Store the URL in an object called 'URL'
+URL <- "http://www.statistik-hessen.de/fileadmin/media/fb05/dokumente/landtagswahl2013.zip"
+
+# Create a temporary file called 'temp' to put the zip file into
+temp <- tempfile()
+
+# Download the compressed file into the temporary file
+download.file(URL, temp)
+
+# Decompress the file and convert it into a data frame
+gzfile
+
+he13 <- import(gzfile(temp, "landtagswahl2013.xls"))
+
+# Delete the temporary file
+unlink(temp)
+
+View(he13)
