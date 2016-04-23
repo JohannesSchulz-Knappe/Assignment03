@@ -52,11 +52,11 @@ View(bw16)
 # Install "https://s3.amazonaws.com/bytescout.com/files/PDFMultitool.exe"
 # Download "https://www.statistik.rlp.de/fileadmin/dokumente/nach_themen/stat_analysen/wahlen/lw/wahlnachtanalyse-lw2016.pdf"
 # Open wahlnachtanalyse-lw2016.pdf in PDFMultitool
-# Convert tables on page 64 and 65 into .csv format, without headers. Save .csv files in 
-# working directory
+# Convert tables on page 64 and 65 into .csv format, without headers. Save .csv files in the
+# Data_Files folder in the working directory
 
-rp16a <- read.csv('wahlnachtanalyse-lw2016_page_64.csv', header = FALSE, sep = ';')
-rp16b <- read.csv('wahlnachtanalyse-lw2016_page_65.csv', header = FALSE, sep = ';')
+rp16a <- read.csv('Data_Files/wahlnachtanalyse-lw2016_page_64.csv', header = FALSE, sep = ';')
+rp16b <- read.csv('Data_Files/wahlnachtanalyse-lw2016_page_65.csv', header = FALSE, sep = ';')
 
 View(rp16a)
 
