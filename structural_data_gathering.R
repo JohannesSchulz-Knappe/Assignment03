@@ -35,6 +35,12 @@ rm(possible_dir) # remove possible_dir vector
 # Retrieve structura data                   #
 #-------------------------------------------#
 
+### Attention:
+# Since the DESTATIS webpage is down, we currently use data of another group that used similar 
+# data in their project last term. This will be updated as soon as the service of the DESTATIS
+# webpage is available again
+
+
 ### Citation:
 
 # Data has to be downloaded manually, as the federal statistical offices
@@ -110,4 +116,5 @@ refugees_raw <- read.csv("Data_Files/661-31-4.csv",
                    na.strings = c("-","."),
                    nrows = 534,
                    dec = ",") # loads data frame
+
 
