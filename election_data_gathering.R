@@ -1,9 +1,9 @@
 #######################################################################
 # MPP-E1180: Introduction to Collaborative Social Science Data Analysis
 # Assignment03
-# Webscraping the datasets 
+# Election Data Gathering
 # Johannes Schulz-Knappe
-# Updated 22 April 2016
+# Updated 23 April 2016
 # Hertie School of Governance
 #######################################################################
 
@@ -58,6 +58,8 @@ View(bw16)
 rp16a <- read.csv('wahlnachtanalyse-lw2016_page_64.csv', header = FALSE, sep = ';')
 rp16b <- read.csv('wahlnachtanalyse-lw2016_page_65.csv', header = FALSE, sep = ';')
 
+View(rp16a)
+
 # Saxony Anhalt 2016
 sa16 <- read.csv('http://www.statistik.sachsen-anhalt.de/wahlen/lt16/erg/csv/lt16dat2.csv',
                  sep = ';')
@@ -73,7 +75,7 @@ bb14 <- source_XlsxData('https://www.statistik-berlin-brandenburg.de/Publikation
                         2, cache = TRUE)
 ## SHA-1 hash of the downloaded data file is: 'd017e1c2b9bf28227362978e41986a023f149237'
 
-
+View(bb14)
 
 # Saxony 2014
 sx14 <- read.csv
@@ -94,8 +96,6 @@ temp <- tempfile()
 download.file(URL, temp)
 
 # Decompress the file and convert it into a data frame
-gzfile
-
 he13 <- import(gzfile(temp, "landtagswahl2013.xls"))
 
 # Delete the temporary file
