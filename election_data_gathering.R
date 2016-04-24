@@ -65,7 +65,10 @@ rm(table) # clean environment
 ## Data only available on Land level
 
 
-#### Rhineland-Palatinate 2016 (and changes from 2011)
+### Rhineland-Palatinate 2016
+
+rp16_rawvg <- read.csv('http://www.wahlen.rlp.de/ltw/wahlen/2016/downloads/lw000.txt',
+                     sep = ';', header = TRUE)
 
 ## data available in .pdf format
 # Install "https://s3.amazonaws.com/bytescout.com/files/PDFMultitool.exe"
@@ -77,15 +80,10 @@ rm(table) # clean environment
 rp16_raw <- read.csv('Data_Files/wahlnachtanalyse-lw2016_page_65.csv', header = FALSE, sep = ';')
 
 
-### Rhineland-Palatinate 2016 & 2011
+### Rhineland-Palatinate 2011 (Landkreise)
 
-## data available in xlsx format (work in progress)
-# rp_raw <- source_XlsxData('http://www.wahlen.rlp.de/ltw/wahlen/2016_Landtagswahlergebnisse_Wahlkreise_Endgueltig.xlsx',
-                          # 2, cache = TRUE)
-# SHA-1 hash of the downloaded data file is: '684c60bd87144a1215024f912673c3f34ce7f6d9'
-# or
-# rp_raw <- read.xlsx2('http://www.wahlen.rlp.de/ltw/wahlen/2016_Landtagswahlergebnisse_Wahlkreise_Endgueltig.xlsx',
-                          # 2)
+rp11_raw <- read.csv('http://www.wahlen.rlp.de/ltw/wahlen/2011/downloads/lw000.txt',
+                       sep = ';', header = TRUE)
 
 
 ### Rhineland-Palatinate 2006
@@ -97,7 +95,7 @@ rp16_raw <- read.csv('Data_Files/wahlnachtanalyse-lw2016_page_65.csv', header = 
 
 sa16_raw <- read.csv('http://www.statistik.sachsen-anhalt.de/wahlen/lt16/erg/csv/lt16dat2.csv',
                  sep = ';')
-
+View(sa11_raw)
 
 ### Saxony Anhalt 2011
 

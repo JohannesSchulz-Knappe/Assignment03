@@ -3,7 +3,7 @@
 # Assignment03
 # Structural Data Gathering 
 # Johannes Schulz-Knappe
-# Updated 23 April 2016
+# Update 24 April 2016
 # Hertie School of Governance
 #######################################################################
 
@@ -65,7 +65,7 @@ rm(possible_dir) # remove possible_dir vector
 # Downloaded on 11/8/2015
 # Specification: "Zeit auswählen" (select time) = 2013
 
-education_raw <- read.csv("Data_Files/AI003-2.csv",
+edu_raw <- read.csv("Data_Files/AI003-2.csv",
                          header = FALSE, 
                          sep = ";", 
                          na.strings = c("-","."),
@@ -81,7 +81,7 @@ education_raw <- read.csv("Data_Files/AI003-2.csv",
 # Downloaded 11/8/2015
 # Specification: "Zeit auswählen" (select time) = 2014
 
-unemployment_raw <- read.csv("Data_Files/659-71-4.csv",
+unemp_raw <- read.csv("Data_Files/659-71-4.csv",
                     header = FALSE, 
                     sep = ";", 
                     na.strings = c("-","."),
@@ -110,7 +110,7 @@ gdp_raw <- read.csv("Data_Files/AI-N-10.csv",
 # Downloaded 11/8/2015
 # Specification: "Zeit auswählen" (select time) = 12/31/2013
 
-refugees_raw <- read.csv("Data_Files/661-31-4.csv",
+refugee_raw <- read.csv("Data_Files/661-31-4.csv",
                    header = FALSE, 
                    sep = ";", 
                    na.strings = c("-","."),
