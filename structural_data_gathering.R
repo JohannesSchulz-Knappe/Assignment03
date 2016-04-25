@@ -11,8 +11,6 @@
 # Preparation                             #
 #-----------------------------------------#
 
-rm(list = ls()) # Clear enviornment
-
 
 ## if not done before, install packages:
 # install.packages("repmis")
@@ -69,7 +67,8 @@ edu_raw <- read.csv("Data_Files/AI003-2.csv",
                          header = FALSE, 
                          sep = ";", 
                          na.strings = c("-","."),
-                         col.names = c("year", "district.ID", "district.name", "abitur.ratio", "nodegree.ratio"),
+                         col.names = c("date", "district.ID", "district.name", 
+                                       "abitur.percent", "nodegree.percent"),
                          skip = 6,
                          nrows = 525,
                          dec=",") # loads data frame
@@ -99,7 +98,7 @@ gdp_raw <- read.csv("Data_Files/AI-N-10.csv",
                    header = FALSE, 
                    sep = ";", 
                    na.strings = c("-","."),
-                   col.names = c("year", "district.ID", "district.name", "GDP.cap"),
+                   col.names = c("date", "district.ID", "district.name", "GDP.cap"),
                    skip = 7,
                    nrows = 525) # loads data frame
 
@@ -114,7 +113,11 @@ refugee_raw <- read.csv("Data_Files/661-31-4.csv",
                    header = FALSE, 
                    sep = ";", 
                    na.strings = c("-","."),
-                   nrows = 534,
+                   col.names = c("date", "district.ID", "district.name", 
+                                 "column04", "column05", "column06",
+                                 "column07", "column08", "column09",
+                                 "asylum.seeker"),
+                   skip = 9,
+                   nrows = 525,
                    dec = ",") # loads data frame
-
 

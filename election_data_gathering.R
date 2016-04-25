@@ -2,7 +2,7 @@
 # MPP-E1180: Introduction to Collaborative Social Science Data Analysis
 # Assignment03
 # Election Data Gathering
-# Johannes Schulz-Knappe
+# Md Mujahedul Islam & Johannes Schulz-Knappe
 # Update 24 April 2016
 # Hertie School of Governance
 #######################################################################
@@ -11,16 +11,10 @@
 # Preparation                             #
 #-----------------------------------------#
 
-rm(list = ls()) # Clear enviornment
-
 ## if not done before, install packages:
 # install.packages("repmis")
-# install.packages("rio")
-# install.packages("xlsx")
 
 library(repmis)
-library(rio)
-library(xlsx)
 library(rvest)
 library(dplyr)
 
@@ -36,49 +30,27 @@ rm(possible_dir) # remove possible_dir vector
 # Retrieve the data for the state elections #
 #-------------------------------------------#
 
-### Baden-Württemberg 2016
+# All downloads updated at 24.04.2016
 
-bw16_raw <- read.csv('http://www.statistik.baden-wuerttemberg.de/Wahlen/Landtag/Kreise.csv', 
-                 sep = ';')
+### Baden-W�rttemberg 2016 & 2011
 
-
-### Baden-Württemberg 2011
-
-# bw11_raw <- read.csv('http://www.stala.bwl.de/Wahlen/Landtag/altKreise.csv',
-                     # sep = ';') # Clean table, but not with recalculations
-
-URL <- 'https://www.statistik-bw.de/Wahlen/Landtag/02035000.tab?E=LW'
-
-# get and parse table from webpage
+URL <- 'http://www.statistik.baden-wuerttemberg.de/Wahlen/Landtag/02035000.tab?E=KR'
 webpage <- read_html(URL)
 table <- html_nodes(webpage, 'table')
-bw11_raw <- html_table(table, fill = TRUE)
+bw_raw <- html_table(table, header = FALSE, 
+                     fill = TRUE) 
+bw_raw <- as.data.frame(bw_raw) # get and parse table from webpage
+bw_raw$X1 <- repair_encoding(bw_raw$X1) # repair encoding of first column
 
 rm(URL)
 rm(webpage)
 rm(table) # clean environment
 
 
-### Baden-Württemberg 2006
-
-## Data not comparable due to district reforms affecting 16 of the 51 districts
-## Data only available on Land level
-
-
 ### Rhineland-Palatinate 2016
 
-rp16_rawvg <- read.csv('http://www.wahlen.rlp.de/ltw/wahlen/2016/downloads/lw000.txt',
+rp16_raw <- read.csv('http://www.wahlen.rlp.de/ltw/wahlen/2016/downloads/lw000.txt',
                      sep = ';', header = TRUE)
-
-## data available in .pdf format
-# Install "https://s3.amazonaws.com/bytescout.com/files/PDFMultitool.exe"
-# Download "https://www.statistik.rlp.de/fileadmin/dokumente/nach_themen/stat_analysen/wahlen/lw/wahlnachtanalyse-lw2016.pdf"
-# Open wahlnachtanalyse-lw2016.pdf in PDFMultitool
-# Convert table on page 65 into .csv format, without headers. Save .csv file in 
-# the Data_Files folder in the working directory
-
-rp16_raw <- read.csv('Data_Files/wahlnachtanalyse-lw2016_page_65.csv', header = FALSE, sep = ';')
-
 
 ### Rhineland-Palatinate 2011 (Landkreise)
 
@@ -86,28 +58,17 @@ rp11_raw <- read.csv('http://www.wahlen.rlp.de/ltw/wahlen/2011/downloads/lw000.t
                        sep = ';', header = TRUE)
 
 
-### Rhineland-Palatinate 2006
-
-## Data only available on district level, too much cleaning effort
-
-
 ### Saxony Anhalt 2016
 
 sa16_raw <- read.csv('http://www.statistik.sachsen-anhalt.de/wahlen/lt16/erg/csv/lt16dat2.csv',
                  sep = ';')
-View(sa11_raw)
+
 
 ### Saxony Anhalt 2011
 
-sa11_raw <- read.csv('https://www.statistik.sachsen-anhalt.de/wahlen/lt11/erg/csv/lt11dat2.csv',
+sa11_raw <- read.csv('http://www.statistik.sachsen-anhalt.de/wahlen/lt11/erg/csv/lt11dat2.csv',
                      sep = ';')
 
-
-### Saxony Anhalt 2006
-
-sa06_raw <- read.csv('https://www.statistik.sachsen-anhalt.de/wahlen/lt06/erg/csv/lt06dat2.csv',
-                     sep = ';')
-View(sa06_raw)
 
 
 
