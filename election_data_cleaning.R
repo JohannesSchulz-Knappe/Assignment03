@@ -3,13 +3,13 @@
 # Assignment03
 # Election Data Cleaning
 # Md Mujahedul Islam & Johannes Schulz-Knappe 
-# Update 24 April 2016
+# Update 25 April 2016
 # Hertie School of Governance
 #######################################################################
 
-#-----------------------------------------#
-# 0. Preparation                          #
-#-----------------------------------------#
+#--------------------------------------#
+# Preparation                          #
+#--------------------------------------#
 
 
 ## if not done before, install packages:
@@ -24,15 +24,8 @@ set_valid_wd(possible_dir) # Set to first valid directory in the possible_dir ve
 rm(possible_dir) # delete possible_dir
 
 
-#-----------------------#
-# 1. Getting data files #
-#-----------------------#
-
-source("election_data_gathering.R")
-
-
 #------------------#
-# 2. Cleaning data #
+# Cleaning data    #
 #------------------#
 
 ### 1. Baden-Württemberg
@@ -204,14 +197,17 @@ names(sa2) <- c("ID", "district.name", "eligible.voters", "voters.n",
 # calculating voter turnout 
 sa2$lag.turnout <- sa2$voters.n/sa2$eligible.voters 
 
-# calculating party vote shares
-sa2$lag.CDU     <- sa2$CDU.n/sa2$voters.n
-sa2$lag.Linke   <- sa2$Linke.n/sa2$voters.n
-sa2$lag.SPD     <- sa2$SPD.n/sa2$voters.n
-sa2$lag.Greens  <- sa2$Greens.n/sa2$voters.n
-sa2$lag.FDP     <- sa2$FDP.n/sa2$voters.n 
+# calculating party vote shares in percentage
+sa2$cent        <- 100
+sa2$lag.CDU     <- sa2$CDU.n/sa2$voters.n*sa2$cent
+sa2$lag.Linke   <- sa2$Linke.n/sa2$voters.n*sa2$cent
+sa2$lag.SPD     <- sa2$SPD.n/sa2$voters.n*sa2$cent
+sa2$lag.Greens  <- sa2$Greens.n/sa2$voters.n*sa2$cent
+sa2$lag.FDP     <- sa2$FDP.n/sa2$voters.n*sa2$cent
+
 
 # deleting used columns
+sa2$cent            <- NULL
 sa2$eligible.voters <- NULL
 sa2$voters.n        <- NULL
 sa2$valid.votes     <- NULL
@@ -233,6 +229,11 @@ sa$state <- "SA"
 sa$election.year <- "2016"
 
 
-data.election <- rbind(bw, rp, sa)
-View(data.election)
+
+#---------------------------#
+# Merge election data       #
+#---------------------------#
+
+data.election <- rbind(bw, rp, sa) # merge all election data sets into one data frame
+
 

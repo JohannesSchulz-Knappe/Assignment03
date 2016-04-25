@@ -9,6 +9,7 @@
 
 rm(list = ls())
 
+library(repmis)
 
 # Create list of commonly used working directories (update, if needed)
 possible_dir <- c('C:/Users/Johannes SK/Dropbox/Studium/Spring2016/CollaborativeResearch/Assignment03',
@@ -42,3 +43,4 @@ Data <- merge(Data, gdp, "ID", all.x = TRUE)
 Data <- merge(Data, unemp, "ID", all.x = TRUE)
 Data <- merge(Data, refugee, "ID", all.x = TRUE)
 
+View(Data)
