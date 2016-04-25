@@ -38,9 +38,8 @@ source("structural_data_cleaning.R")
 
 # Merging the data
 
-Data <- merge(data.election, edu, "ID", all.x = TRUE)
-Data <- merge(Data, gdp, "ID", all.x = TRUE)
-Data <- merge(Data, unemp, "ID", all.x = TRUE)
-Data <- merge(Data, refugee, "ID", all.x = TRUE)
+Data <- merge(data.election, edu, "ID")
+Data <- merge(Data, gdp, "ID")
+Data <- merge(Data, unemp, "ID")
+Data <- merge(Data, refugee, "ID")
 
-View(Data)

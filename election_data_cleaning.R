@@ -42,7 +42,7 @@ bw1 <- bw1[-c(1, 2, 3, 3+2*(1:44)), ] # delete rows that are not 2016
 bw2 <- bw_raw[, c(1, 3, 4, 5, 6, 7, 8)] # keep relevant columns
 names(bw2) <- c("district.name", "lag.turnout", "lag.CDU", "lag.Greens", 
                 "lag.SPD", "lag.FDP", "lag.Linke") # rename columns
-bw2 <- bw2[-c(1,2,3,4, 4+2*(1:43)), ] # delete rows that are not 2011
+bw2 <- bw2[-c(1, 2, 3, 4, 4+2*(1:43)), ] # delete rows that are not 2011
 bw2$district.name <- bw1$district.name # add district.names as identifier
 
 
@@ -87,6 +87,7 @@ bw_ID$district.name <- gsub(pattern = ', Landeshauptstadt',
                             replacement = '', 
                             x = bw_ID$district.name)
 
+
 bw_ID <- arrange(bw_ID, bw_ID$district.name) # sort alphabetically
 bw$ID <- bw_ID$district.ID # add ID to bw
 
@@ -100,6 +101,7 @@ bw <- bw[c(11, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10)] # reorder columns
 rp1 <- rp16_raw[, c(2, 105)] # keep relevant columns
 names(rp1) <- c("district.name", "vote.AfD") # rename columns
 rp1 <- rp1[-c(1, grep('VG$', rp1$district.name)), ] # delete rows that are not district level
+
 
 # clean district names
 rp1$district.name <- gsub(pattern = 'Kaiserslautern, Landkreis', 
@@ -122,6 +124,7 @@ rp2 <- rp11_raw[, c(2, 9, 94, 95, 96, 97, 98)] # keep relevant columns
 names(rp2) <- c("district.name", "lag.turnout", "lag.SPD",
                 "lag.CDU", "lag.FDP", "lag.Greens", "lag.Linke") # rename columns
 rp2 <- rp2[-1, ] # delete rows that are not district level
+
 
 # clean district names
 rp2$district.name <- gsub(pattern = 'Kaiserslautern, Landkreis', 
@@ -181,8 +184,9 @@ rp <- rp[c(11, 1, 10, 2, 3, 4, 5, 6, 7, 8, 9)] # reorder columns
 
 sa1 <- sa16_raw[, c(7, 8, 12, 19)] # keep relevant columns
 names(sa1) <- c("ID", "district.name", "valid.votes", "AfD.n") # rename columns
+sa1 <- sa1[-c(1, 16:58), ] # delete rows that are not district level
 
-sa1$vote.AfD    <- sa1$AfD.n/sa1$valid.votes
+sa1$vote.AfD    <- sa1$AfD.n/sa1$valid.votes*100
 sa1$AfD.n       <- NULL
 sa1$valid.votes <- NULL # Calculate voteshare variable and delete used columns
 
@@ -193,21 +197,21 @@ sa2 <- sa11_raw[, c(7, 8, 9, 10, 12, 13, 14, 15, 16, 22)] # keep relevant column
 names(sa2) <- c("ID", "district.name", "eligible.voters", "voters.n", 
                 "valid.votes", "CDU.n", "Linke.n", "SPD.n", "Greens.n", "FDP.n")
                 # rename columns
+sa2 <- sa2[-c(1, 16:60), ] # delete rows that are not district level
+
 
 # calculating voter turnout 
-sa2$lag.turnout <- sa2$voters.n/sa2$eligible.voters 
+sa2$lag.turnout <- sa2$voters.n/sa2$eligible.voters*100 
 
 # calculating party vote shares in percentage
-sa2$cent        <- 100
-sa2$lag.CDU     <- sa2$CDU.n/sa2$voters.n*sa2$cent
-sa2$lag.Linke   <- sa2$Linke.n/sa2$voters.n*sa2$cent
-sa2$lag.SPD     <- sa2$SPD.n/sa2$voters.n*sa2$cent
-sa2$lag.Greens  <- sa2$Greens.n/sa2$voters.n*sa2$cent
-sa2$lag.FDP     <- sa2$FDP.n/sa2$voters.n*sa2$cent
+sa2$lag.CDU     <- sa2$CDU.n/sa2$voters.n*100
+sa2$lag.Linke   <- sa2$Linke.n/sa2$voters.n*100
+sa2$lag.SPD     <- sa2$SPD.n/sa2$voters.n*100
+sa2$lag.Greens  <- sa2$Greens.n/sa2$voters.n*100
+sa2$lag.FDP     <- sa2$FDP.n/sa2$voters.n*100
 
 
 # deleting used columns
-sa2$cent            <- NULL
 sa2$eligible.voters <- NULL
 sa2$voters.n        <- NULL
 sa2$valid.votes     <- NULL
@@ -222,12 +226,20 @@ sa2$FDP.n           <- NULL
 
 sa <- merge(sa1, sa2, c("ID", "district.name"))
 
+# clean district names
+
+sa$district.name <- gsub(pattern = 'Landkreis ', 
+                         replacement = '', 
+                         x = sa$district.name)
+sa$district.name <- gsub(pattern = 'Kreisfreie Stadt ', 
+                         replacement = '', 
+                         x = sa$district.name)
+
 
 # Step 4: Adding state and year variable
 
 sa$state <- "SA"
 sa$election.year <- "2016"
-
 
 
 #---------------------------#
@@ -236,4 +248,13 @@ sa$election.year <- "2016"
 
 data.election <- rbind(bw, rp, sa) # merge all election data sets into one data frame
 
+# replace commas with periods 
+data.election[, c(4:10)] <- as.numeric(gsub(",", ".", as.matrix(data.election[, c(4:10)])))
 
+# round to 2 digits
+data.election[, c(4:10)] <- round(as.matrix(data.election[, c(4:10)]), digits=2)
+
+data.election$ID <- as.numeric(as.character(data.election$ID)) # convert ID into numeric
+
+# convert ID into numeric
+data.election$election.year <- as.numeric(data.election$election.year)

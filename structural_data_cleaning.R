@@ -23,14 +23,7 @@ rm(possible_dir) # remove possible_dir vector
 
 
 #-----------------------#
-# 1. Getting data files #
-#-----------------------#
-
-source("structural_data_gathering.R")
-
-
-#-----------------------#
-# 1. Cleaning data      #
+# Cleaning data         #
 #-----------------------#
 
 
@@ -38,15 +31,18 @@ source("structural_data_gathering.R")
 
 edu <- edu_raw[, -c(1, 3)]  # delete unnecessary columns
 names(edu) <- c("ID", "abitur.ratio", "nodegree.ratio")   # rename columns
-edu$ID <- as.numeric(edu$ID) # change ID class to numeric
+edu$ID <- as.numeric(as.character(edu$ID)) # convert ID to numeric
 
 
 ### 2. GDP per capita
 
 gdp <- gdp_raw[, -c(1, 3)]  # delete unnecessary columns
 names(gdp) <- c("ID", "GDP.capita")   # rename columns
-gdp$ID <- as.numeric(gdp$ID) # change ID class to numeric
-gdp$GDP.capita <- as.numeric(gdp$GDP.capita) # change GDP variable to numeric
+gdp$ID <- as.numeric(as.character(gdp$ID)) # convert ID to numeric
+
+gdp$GDP.capita <- as.character(gdp$GDP.capita) # convert GDP.capita to character
+gdp$GDP.capita <- gsub(",", ".", x = gdp$GDP.capita) # replace commas with periods
+gdp$GDP.capita <- as.numeric(gdp$GDP.capita) # convert GDP.capita to numeric
 
 
 ### 3. Unemployment rate
@@ -54,11 +50,15 @@ gdp$GDP.capita <- as.numeric(gdp$GDP.capita) # change GDP variable to numeric
 unemp <- unemp_raw[, c(2, 11)] # keep necessary columns
 unemp <- unemp[-c(1:9), ] # delete unnecessary rows
 names(unemp) <- c("ID", "unempl.rate") # rename columns
+unemp$ID <- as.numeric(as.character(unemp$ID)) # convert ID to numeric
+
+unemp$unempl.rate <- as.character(unemp$unempl.rate) # convert unempl.rate  to character
+unemp$unempl.rate <- gsub(",", ".", x = unemp$unempl.rate) # replace commas with periods
+unemp$unempl.rate <- as.numeric(unemp$unempl.rate) # convert unempl.rate  to numeric
 
 
 ### 4. Refugees
 
 refugee <- refugee_raw[, c(2, 10)] # keep necessary columns
 names(refugee) <- c("ID", "n.refugees")
-
-
+refugee$ID <- as.numeric(as.character(refugee$ID)) # convert ID to numeric

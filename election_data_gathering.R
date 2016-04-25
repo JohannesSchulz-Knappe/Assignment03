@@ -38,7 +38,7 @@ URL <- 'http://www.statistik.baden-wuerttemberg.de/Wahlen/Landtag/02035000.tab?E
 webpage <- read_html(URL)
 table <- html_nodes(webpage, 'table')
 bw_raw <- html_table(table, header = FALSE, 
-                     fill = TRUE) 
+                     fill = TRUE)
 bw_raw <- as.data.frame(bw_raw) # get and parse table from webpage
 bw_raw$X1 <- repair_encoding(bw_raw$X1) # repair encoding of first column
 
