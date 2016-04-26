@@ -39,6 +39,8 @@ mean(Data$nodegree.ratio, na.rm = TRUE)
 mean(Data$n.refugees, na.rm = TRUE)
 mean(Data$abitur.ratio, na.rm = TRUE)
 
+summary(Data)
+View(test)
 #------------------------------------------------------#
 #loop function for finding "mean" for all the variables#
 #------------------------------------------------------#
@@ -81,6 +83,8 @@ ggplot(Data) +
   ggtitle("Vote share of AfD in three different states of Germany") +
   theme_bw() +
   theme(axis.text.x = element_text(angle = 90))
+  out = 'figures/AfD_voteshare_in_RP_BW_SA.pdf'
+
 
 
 
@@ -175,10 +179,26 @@ stargazer::stargazer(reg1, reg2, reg3, reg4,
           add.lines = list(c('District FE?', rep('NO', 4))),
           font.size = 'small',
           digit = 2, 
-out = 'C:/Users/User/Documents/GitHub/Assignment03/tables/afd_voteshare_regressions.tex')
+          out = 'tables/afd_voteshare_regressions.tex')
 
 #------------------------------------------------------------------------------#
 #------------------------------------------------------------------------------#
+#Summary statistics of all variables#
+#------------------------------------------------------------------------------#
+summary_labels <- c('Vote share of AfD', 'Vote turnout in 2011', 
+                        'Vote share of CDU in 2011', 'Vote share of Greens in 2011', 
+                        'Vote share of SPD in 2011', 'Vote share of FDP in 2011', 
+                        'Vote share of Linke in 2011', 'High school ratio', 
+                        'No high school degree', 'GDP per capita', 
+                        'Unemployment rate', 'No. of refugees')
 
 
+stargazer(Data[4:16],
+title = 'Summary statistics of all variables',
+covariate.labels = summary_labels,
+font.size = 'small',
+digit = 2, 
+out = 'C:/Users/User/Documents/GitHub/Assignment03/tables/summary_statistics.tex')
+
+#------------------------------------------------------------------------------#
 
