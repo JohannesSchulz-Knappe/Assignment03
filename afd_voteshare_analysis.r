@@ -86,8 +86,21 @@ ggplot(Data) +
   out = 'figures/AfD_voteshare_in_RP_BW_SA.pdf'
 
 
-
-
+#---------------------------------------------------------------------#
+#---------------Correlation matrix in Table---------------------------#
+#---------------------------------------------------------------------#
+  
+  correlation.matrix <- cor(Data[,c("vote.AfD","lag.CDU",
+                                    "lag.SPD","GDP.capita",
+                                    "unempl.rate","n.refugees",
+                                    "abitur.ratio")])
+  stargazer(correlation.matrix, 
+            title = "Correlation Matrix",
+            font.size = 'small',
+            out = 'tables/correlation_matrix.tex')
+  
+  
+  
 #-----------------------------------------------------#
 #Correlation of AfD's vote share and unemployment rate#
 #-----------------------------------------------------#
