@@ -1,16 +1,3 @@
-# Assignment03
-Third pair assignment for the class MPP-E1180 at the Hertie School of Governance, spring term 2016
-
-I am just writing here some notes that we need to do. We will delete this notes for sure later on:
- 
- 1. Clearly writing on how we collected, cleaned, and merged about 9 different datasets
- 2. final sample size, it's merit and potential demerits. 
- 2. Description on our dependent variable and right hand side variable.
- 3. Findings both descriptive and inferrential 
-
-
-## Access the dataset
-
 # Assignment 3 - MPP-E1180: Introduction to Collaborative Social Science Data Analysis
 
 ### Spring 2016
@@ -18,8 +5,6 @@ I am just writing here some notes that we need to do. We will delete this notes 
 **Version: 27 April 2016**
 
 #### By: Md Mujahedul Islam & Johannes Schulz-Knappe
-
-
 
 ### Description of the project progress
 
@@ -30,11 +15,14 @@ The task for this assignment was to gather web based data from at least two sour
 
 ### Documents in the repository
 
-Besides this readme, there are three files in the repository
+Besides this readme, there are 7 main files in the repository
 
+- [Assignment03.pdf](https://github.com/JohannesSchulz-Knappe/Assignment03/blob/master/Assignment03.pdf) is the main analysis document in pdf-format.
+- [Assignment03.Rmd](https://github.com/JohannesSchulz-Knappe/Assignment03/blob/master/Assignment03.RMD) is a markup document which contains the analysis and R code chunks in raw format.
+- [Data.Rda](https://github.com/JohannesSchulz-Knappe/Assignment03/blob/master/Data.Rda) is our data set. It contains 15 variables on 94 observations. 
+- [1_Data.R](https://github.com/JohannesSchulz-Knappe/Assignment03/blob/master/1_Data.R) is the R file that contains all our data gathering, cleaning, and merging work. Run this file to update the dataset.
+- [2_Analysis.R](https://github.com/JohannesSchulz-Knappe/Assignment03/blob/master/2_Analysis.R) is the R file that separately contains all analysis we performed on the dataset
+- [Packages1.bib](https://github.com/JohannesSchulz-Knappe/Assignment03/blob/master/Packages1.bib) and [Packages2.bib](https://github.com/JohannesSchulz-Knappe/Assignment03/blob/master/Packages2.bib) are two bibTeX libraries that list the packages we used for 1) the data collection, and 2) the analysis.
 
-
-
-- [Assignment02.pdf](https://github.com/JohannesSchulz-Knappe/Assignment02/blob/master/Assignment02.pdf) is the main research proposal pdf-document.
-- [Assignment02.Rmd](https://github.com/JohannesSchulz-Knappe/Assignment02/blob/master/Assignment02.Rmd) is a mark up document which contains the research proposal in raw form
-- [Library.bib](https://github.com/JohannesSchulz-Knappe/Assignment02/blob/master/Library.bib) contains the relevant references for our study in BibTeX format
+Furthermore, there are four folders. The [data_gathering](https://github.com/JohannesSchulz-Knappe/Assignment03/tree/master/data_gathering) folder contains the two R files that gather and scrape our datasets, while the [data_cleaning](https://github.com/JohannesSchulz-Knappe/Assignment03/tree/master/data_cleaning) folder contains the two R files that clean the election and the structural data. The [1_Data.R](https://github.com/JohannesSchulz-Knappe/Assignment03/blob/master/1_Data.R) file has to have access to those folders in order to run the data collection.
+The [data_raw](https://github.com/JohannesSchulz-Knappe/Assignment03/tree/master/data_raw) folder contains the structural data sets that were manually downloaded from the Genesis-Online database. And finally, the [outputs](https://github.com/JohannesSchulz-Knappe/Assignment03/tree/master/outputs) folder contains two subfolders - [figures](https://github.com/JohannesSchulz-Knappe/Assignment03/tree/master/outputs/figures) and [tables](https://github.com/JohannesSchulz-Knappe/Assignment03/tree/master/outputs/tables) - where we stored the tables and figures we created in our analysis.
