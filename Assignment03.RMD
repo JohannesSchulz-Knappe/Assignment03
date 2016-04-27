@@ -1,0 +1,294 @@
+---
+title: "Assignment 3 - Data set generation and first findings"
+author: "Md Mujahedul Islam & Johannes Schulz-Knappe"
+subtitle: "MPP-E1180 - Hertie School of Governance, Spring 2016"
+date: "April 27, 2016"
+output:
+  pdf_document:
+    fig_caption: yes
+    number_sections: yes
+bibliography:
+- Packages1.bib
+- Packages2.bib
+- Library.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+``` {r intialisation, echo = FALSE, message = FALSE, warning = FALSE}
+options(repos=c(CRAN="http://mirrors.softliste.de/cran/"))
+
+rm(list = ls())
+
+load <- c("magrittr", "dplyr", "xtable", "texreg", 
+          "stargazer", "readxl", "ggplot2", "grid", 
+          "captioner", "foreign", "rms", "Zelig", 
+          "knitr", "GGally", "gridExtra", 
+          "zoo", "rugarch", "texreg", "dplyr", "magrittr")
+
+loaded <- lapply(load, function(x) {
+  if(!require(x, character.only = T)) {
+    install.packages(x)
+    require(x, character.only = T)
+  }
+})
+rm(load, loaded)
+
+figcap <- captioner(prefix = "Figure", 
+                    auto_space = TRUE, levels = 1, type = NULL)
+tablecap <-captioner(prefix = "Table", 
+                     auto_space = TRUE, levels = 1, type = NULL)
+
+
+# Set the working directory:
+
+# Create list of commonly used working directories (update, if needed)
+possible_dir <- c('C:/Users/Johannes SK/Dropbox/Studium/Spring2016/CollaborativeResearch/Assignment03',
+                  'C:/Users/User/Documents/GitHub/Assignment03')
+
+set_valid_wd(possible_dir) # Set to first valid directory in the possible_dir vector
+rm(possible_dir) # remove possible_dir vector
+
+```
+
+
+# Introduction
+This research project ...
+
+
+# Data and Variables
+```{r echo=F, warning=F, message=F, error=F}
+load(".RData")
+
+# load source file
+source("Analysis.R")
+```
+
+## Data gathering
+
+
+
+## Data cleaning and merging
+
+# Empirical Findings
+
+
+## Descriptive Statistics
+## Summary Statistics
+Please give a short description of this summary statistics!!!
+```{r sumstat, echo=F, warning=F, message=F, error=F, results='asis'}
+summary_labels <- c('Vote share of AfD', 'Vote turnout in 2011', 
+                        'Vote share of CDU in 2011', 'Vote share of Greens in 2011', 
+                        'Vote share of SPD in 2011', 'Vote share of FDP in 2011', 
+                        'Vote share of Linke in 2011', 'High school ratio', 
+                        'No high school degree', 'GDP per capita', 
+                        'Unemployment rate', 'No. of refugees')
+
+
+stargazer(Data[4:16],
+title = 'Summary statistics of all variables',
+covariate.labels = summary_labels,
+font.size = 'small',
+type="latex", header = F)
+```
+
+```{r histo, echo=F, warning=F, message=F, error=F, results='hide', fig.height=4}
+ggplot(Data) +
+  geom_histogram(aes(x = n.refugees),
+                 colour = "black",
+                 fill = "transparent",
+                 binwidth = 30) +
+  ylab("Frequency") +
+  xlab("No. of refugess in RP, BW, and SA") +
+  theme_light()
+```
+
+
+```{r bar, echo=F, warning=F, message=F, error=F, results='hide', fig.width=13}
+ggplot(Data) +
+  geom_bar(aes(y = vote.AfD, x = reorder(district.name, -vote.AfD)), 
+           stat = "identity") +
+  ylab("AfD's vote share") +
+  xlab("Different consistuencies of RP, BW and SA") +
+  ggtitle("Vote share of AfD in three different states of Germany") +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90))
+  ```
+
+
+
+
+
+\pagebreak
+
+## Correlations among variables
+
+Please give a short description of this correlation matrix!!!
+
+
+```{r corr, echo=F, warning=F, message=F, error=F, results='asis'}
+ correlation.matrix <- cor(Data[,c("vote.AfD","lag.CDU",
+                                    "lag.SPD","GDP.capita",
+                                    "unempl.rate","n.refugees",
+                                    "abitur.ratio")])
+  stargazer(correlation.matrix, 
+            title = "Correlation Matrix of different variables",
+            font.size = 'small',
+            type="latex", header = F)
+```       
+  
+
+### Correlation of AfD's vote share and GDP per capita
+The following figure shows statistically significant (the t value from the Pearson's product-moment correlation test is 6.27) positve correlation of increase in unemployment rate with the increase in AfD's vote share in those three states. 
+
+``` {r fig1, echo = F, message = F, results = "hide", error=F, fig.height=4}
+ggplot2::ggplot(Data,aes(log(x = GDP.capita), vote.AfD)) + 
+  xlab("GDP per capita in RP, BW, and SA") +
+  ylab("AfD's vote share (in %)") +
+  geom_point() + geom_smooth() + 
+  theme_bw()
+```
+
+
+\pagebreak
+
+### Correlation of AfD's vote share and unemployment rate
+The following figure shows statistically significant (t value is -2.04) negative coorelation of increasing Per capita GDP with AfD's vote share. The 
+
+``` {r fig2, echo = F, message = F, results = "hide", error=F, fig.height=4}
+ggplot2::ggplot(Data,aes(log(x = unempl.rate), vote.AfD)) + 
+  xlab("Unemployment rate in RP, BW, and SA") +
+  ylab("AfD's vote share (in %)") +
+  geom_point() + geom_smooth() + 
+  theme_bw()
+```
+
+\pagebreak
+
+### Correlation of AfD's vote share and number of refugees
+
+The result though shows positive coorelation of increased number of refugees with with AfD's vote share, it is not statistically significant since the t value is .13 from the Pearson's product-moment correlation test. 
+
+(Since 0/1 bounded DV, beta regression better for analysis)
+
+``` {r fig3, echo = F, message = F, results = "hide", error=F, fig.height=4}
+ggplot2::ggplot(Data,aes(log(x = n.refugees), vote.AfD)) + 
+  xlab("Number of refugees in RP, BW, and SA") +
+  ylab("AfD's vote share (in %)") +
+  geom_point() + geom_smooth() + 
+  theme_light()
+```
+
+
+
+
+
+\pagebreak
+
+## Inferrential Statistics
+
+``` {r regout, echo = F, message = F, results = "asis", error=F}
+reg1 <- lm(vote.AfD ~ GDP.capita + unempl.rate + n.refugees, data = Data)
+reg2 <- lm(vote.AfD ~ GDP.capita + unempl.rate + n.refugees + lag.CDU + 
+             lag.SPD + lag.turnout, data = Data)
+reg3 <- lm(vote.AfD ~ GDP.capita + unempl.rate + n.refugees + 
+             abitur.ratio + nodegree.ratio, data = Data)
+reg4 <- lm(vote.AfD ~ GDP.capita + unempl.rate + n.refugees 
+           + lag.CDU + lag.SPD + lag.turnout + abitur.ratio + 
+             nodegree.ratio, data = Data)
+
+
+var_labels <- c('GDP per capita', 'Unemployment rate', 'No. of Refugees', 
+            'Vote share of CDU in 2011 election',
+            'Vote share of SPD in 2011 election',
+            'High School Ratio', 'University Degree ratio', '(Intercept)')
+
+stargazer::stargazer(reg1, reg2, reg3, reg4,
+          omit = 'as.factor*', 
+          omit.stat = c('f', 'ser'), # to nicely fits on the page
+          out.header = F,
+          title = 'Determinants of vote for the Alternative for Germany',
+          dep.var.labels = 'Vote share of AfD',
+          covariate.labels = var_labels,
+          label = 'AfD_voteshare',
+          add.lines = list(c('District FE?', rep('NO', 4))),
+          font.size = 'small',
+          type="latex", header = F)
+```
+
+
+
+### Text import
+# Introduction
+
+Within less than three years of being founded by discontented members of the incumbent Christian Democratic Union (CDU), the newly-formed party "Alternative for Germany" (AfD) has already achieved extraordinary vote share in the General election of 2013, the European Parliament election of 2014, [@arzheimer2015afd] and  lately in the three state elections in Baden-Württemberg, Rhineland-Palatinate, and Saxony-Anhalt held on March 2016. The rise of a party that stands against European Integration, argues for a re-arrangement of Germany's liberal foreign and economic policies, and vows for taking strong measure against immigrants, has presented a novel scenario into understanding factors that drive electorate to vote for a party that seemingly stands against the 'norm of the land'. Thus this research proposal endeavors to understand the factors that explain the success and rise of AfD in Germany's political landscape. In the following, we present current literature, and identify the plausible datasets and methodology that this research is going to base on. All work is done using the software R [@CiteR].
+
+## The Research Project
+
+On March 13, 2016, Germany's political landscape experienced "a landslide"[@Zeit2016]. At the three state elections in Bade-Württemberg, Rhineland-Palatinate, and Saxony-Anhalt, the AfD received double digit results from scratch, meaning that it has not been present in the state parliaments before. In Baden-Württemberg (BW), the party received 15.1%, in Rhineland-Palatinate (RP) 12.6%, and in Saxony-Anhalt (SA) even 24.3% [@BWStateOffice; @RPStateOffice; @SAStateOffice], becoming the third strongest party in BW and RP, and the second strongest in SA.
+Not only does the tremendous success of this new policital player harden the set up of the future governments in the respective states, it is also a clear sign that the party has arrived in German mainstream politics [@Spiegel2016].
+
+Our main research question is:
+
+*"What explains the recent electoral success of the AfD in the different constituencies of Baden-Württemberg, Rhineland-Palatinate, and Saxony-Anhalt?"*
+
+We want to understand which structural factors affect the eletoral success of the AfD and whether the characteristics of its voters identified in post-election analyses are reflected in the constituency level data. Furthermore, we want to find out whether the AfD success follows the same patterns as the electoral success of radical right populist parties in the rest of Western Europe.
+
+## About the AfD
+
+Having been founded in February 2013 initially as a eurosceptic party, the AfD just missed the entry into the German national parliament at the federal elections in September 2013 by only 125,000 votes [@schmitt2014euro]. Not a single party in the post-war era was that successful in national elections being only established seven months before[@niedermayer2015neue]. 
+This emergence is attributed to the Eurocrisis and chancellor Merkels strong state interventionist austerity politcs that opened political potential to the right of the established right wing parties CDU/CSU and FDP. The AfD recognized that potential and positioned itself initially as an expert knowledge based eurosceptic party. But over the last years, it became a new host for now unrepresented national conservatives as well as right wing populists. The unifying factors for these different groups are the anti-establishment attitude of the AfD and the image of being the political underdog who is "honest" in face of political and medial lies. In this regard, the AfD shares similarities to other European right wing populist parties [@hausler2015rechten].
+
+The recent refugee crisis that has hit Europe and especially Germany is seen as a major factor that led to new and increased support for the AfD. Chancellor Angela Merkels slogan "Wir schaffen das", expressing optimism with regards to the capability of government and society to handle the refugee crisis, was mostly critized by members of the AfD and to some extend from the CDU itself. As long as the refugee crisis persists, it is assumed that the AfD is going to continue to gain more support [@Spiegel2016].After the March elections, a large debate arose within the CDU/CSU whether the refugee crisis response by chancellor Merkel was responsible for the loss in votes for the CDU. Interestingly, leaders of other parties who supported Merkels "Wir schaffen das" experienced less loss of votes. However, left parties such as "Die Linke" seemed to be especially vulnerable to the emergence of the AfD [@Spiegel2016]. Also, the social democrats (SPD) seem to have lost many voters to the AfD [@Zeit2016].
+
+
+# Literature review
+
+Early analysis of the elections has shown that the AfD was especially successful in mobilizing former non-voters [@Spiegel2016]. It was also very successful amongst labourers and unemployed people. In Saxony-Anhalt, almost one third of this group voted for the AfD. But the analysis also showed that more people with medium education and income voted for the AfD. It is suggested that they are increasingly afraid of change, see the refugee crisis as a culmination of external threat, and are skeptical in the governments capacity to solve it [@Zeit2016].
+
+In a mixed-methods study focussing on the AfD's history, self-description, positioning in the public discourse, and its supporters, @Berbuir2015 found that the party can be described as a "functional equivalent for a right-wing populist party in a country where right-wing politics are strongly stigmatised" [@Berbuir2015]. For our research this means that the AfD can be located in the tradtion of new radical right wing populist (RRWP) parties in Western Europe.
+
+When it comes to the understanding of the rise of RRWP parties, @Ivarsflaten2008 and @swank2003globalization offer important insights.
+In her large scale study comparing the electoral success of RRWP parties, @Ivarsflaten2008 found that successful RRWP parties almost always used anti-immigration rhethorics in their electoral campaigns. The other two focus areas of RRWP parties - opposing political elitism and complains about the economic development - were not always instrumentalized by successful RRWP parties and seem to be more context specific.
+@swank2003globalization analyzed the impact of globalization on the electoral success of RRWP parties in national elections in 16 Western European nations between 1981 and 1998. Their core finding was that the generousity of the welfare state was an important factor that mitigated the impact of economic globalizations on the rise of RRWP parties. Besides that, they found that the volume of refugees and asylum seekers, the level of international immigration, the height of domestic tax burden, previous electoral success of left libertarian parties, and the past voteshare of the RRWP parties all systematically and positively influenced their electoral success. In some occasions, previously declining strength of established right-wing parties was another factor that explained RRWP party success. Interestingly, slow economic growth and the rate of people employed in manufacturing jobs did not have a significant impacts [@swank2003globalization, 230].
+
+# Hypotheses
+
+Based on the insights from previous research on the success of RRWP parties in Western Europe and the findings from post-election analysis for the AfD, we aim to test the following hypotheses for the three state elections.
+
+Demographic hypotheses
+
+> *H1a*: The average level of education in a constituency has a negative impact on the electoral success of the AfD.
+
+> *H1b*: The unemployment rate in a constituency has a positive impact on the electoral success of the AfD.
+
+Foreign exposure hypothesis
+
+> *H2*: The volume of refugees and asylum seekers in a constituency has a positive impact on the electoral success of the AfD.
+
+Economic hypothesis
+
+> *H3*: The height of local tax rates has a positive impact on the electoral success of the AfD.
+
+Political hypotheses
+
+> *H4a*: The rate of non-voters in previous state elections in a constituency has a positive impact on the electoral success of the AfD.
+
+> *H4b*: Declining voteshare of established right wing parties in previous state elections in a constituency has a positive impact on the electoral success of the AfD.
+
+The last hypothesis is based on the assumption that it is the left-shift of extablished right parties that opens up potential for the AfD. A left-shift of a conservative party often ocurrs when it faces political pressure which should be visible in a relative decline in vote share when comparing the previous two state elections.
+
+# Data sources and methodology
+
+We access the electoral data via the State Offices for Statistics in Baden-Württemberg [@BWStateOffice], Rhineland-Palatinate [@RPStateOffice], and Saxony-Anhalt [@SAStateOffice]. We will use the datasets on the March 2016 and the previous two elections in order to retrieve the secondary vote share of the AfD as our dependent variable, and the previous vote shares of right wing parties for hypothesis H4b. The rate of previous non-voters is also retreived from these datasets.
+The Federal Returning Officer [@Bwldata] offers data on constituency level containing information on the unemployment rate, the level of education, and business tax (which we will use as a proxy for local taxation).
+The Federal Statistical Office DESTATIS [@DESTATIS] provides data on the number of refugees in the constituencies. This data is available on county level, which is why we will disaggregate the data according to the population size in each constituency.
+
+After merging the data, we will first analyse descriptive statistics in the form of maps, graphs, and distributions in order to provide a basic overview of the trends in the data. Since our dependent variable is vote share of AfD, we will perform OLS estimations and run different linear models. Besides, we expect to run interaction models in order to test our aforementioned hypotheses.
+
+
+
+# References

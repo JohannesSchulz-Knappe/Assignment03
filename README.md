@@ -7,3 +7,9 @@ I am just writing here some notes that we need to do. We will delete this notes 
  2. final sample size, it's merit and potential demerits. 
  2. Description on our dependent variable and right hand side variable.
  3. Findings both descriptive and inferrential 
+
+
+## Access the dataset
+
+...
+...
