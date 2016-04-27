@@ -114,7 +114,6 @@ bw <- bw[c(11, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10)]
 
 
 
-
 ## 2.2 Rhineland-Palatinate
 
 
@@ -335,7 +334,7 @@ data.election[, c(4:10)] <- as.numeric(gsub(",",
 data.election[, c(4:10)] <- round(as.matrix(data.election[, c(4:10)]), digits=2)
 
 # Convert ID into numeric
-data.election$ID <- as.numeric(as.character(data.election$ID)) 
+data.election$ID <- as.numeric(as.character(data.election$ID))
 
 # Convert election.year into numeric
 data.election$election.year <- as.numeric(data.election$election.year)

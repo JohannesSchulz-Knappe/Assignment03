@@ -20,7 +20,7 @@ rm(list = ls())
 ## 1.2 Load packages for dataset creation
 
 # Create vector of used packages
-packages <- c('repmis', 'rvest', 'plyr', 'dplyr', 'rio', 'xlsx')
+packages <- c('repmis', 'rvest', 'plyr', 'rio', 'xlsx')
 
 # Install packages that are not already installed
 for (p in packages) {
@@ -93,3 +93,6 @@ rm(edu)
 rm(gdp)
 rm(unemp)
 rm(refugee)
+
+# Save Data as file in repository
+save(Data, file = "Data.Rda")

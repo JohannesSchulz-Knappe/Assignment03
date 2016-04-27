@@ -20,7 +20,7 @@ rm(list = ls())
 ## 1.2 Load packages for data analysis
 
 # Create vector of used packages
-packages <- c("repmis", "plyr", "dplyr", "xtable", "texreg", "stargazer", 
+packages <- c("repmis", "plyr", "xtable", "texreg", "stargazer", 
               "magrittr", "readstata13", "ggplot2", "reshape")
 
 # Install packages that are not already installed
@@ -31,6 +31,7 @@ for (p in packages) {
     require(p, character.only=TRUE)
   }
 }
+rm(p)
 
 # Load packages
 loaded <- lapply(packages, require, character.only = TRUE)
@@ -58,7 +59,7 @@ rm(packages)
 
 ## 1.5 Create and load the dataset
 
-source('1_Data.R')
+load('Data.Rda')
 
 
 #--------------------------------------#
@@ -89,12 +90,12 @@ for (i in 4:length(names(Data))) {
 ## 2.2 Summary statistics of all variables
 
 # Assign variable labels
-summary_labels <- c('Vote share of AfD', 'Vote turnout in 2011', 
+summary_labels <- c('Vote share of AfD in 2016', 'Vote turnout in 2011', 
                     'Vote share of CDU in 2011', 'Vote share of Greens in 2011', 
                     'Vote share of SPD in 2011', 'Vote share of FDP in 2011', 
                     'Vote share of Linke in 2011', 'High school ratio', 
-                    'No high school degree', 'GDP per capita', 
-                    'Unemployment rate', 'No. of refugees')
+                    'No degree ratio', 'GDP per capita', 
+                    'Unemployment rate', 'Number of refugees')
 
 # Create summary statistics table
 stargazer(Data[4:16],
@@ -105,7 +106,7 @@ stargazer(Data[4:16],
           out = 'outputs/tables/summary_statistics.tex')
 
 
-## 2.3 Histograph using ggplot to show the number of refugees
+## 2.3 Histograph using ggplot to show frequency distribution of the number of refugees
 
 ggplot(Data) +
   geom_histogram(aes(x = n.refugees),
@@ -113,7 +114,7 @@ ggplot(Data) +
                  fill = "transparent",
                  binwidth = 30) +
   ylab("Frequency") +
-  xlab("No. of refugees in RP, BW, and SA") +
+  xlab("Number of refugees per district") +
   theme_light()
 
 

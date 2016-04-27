@@ -7,26 +7,22 @@ output:
   pdf_document:
     fig_caption: yes
     number_sections: yes
-bibliography:
-- Packages1.bib
-- Packages2.bib
-- Library.bib
 ---
 
 ```{r setup, include=F}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-``` {r intialisation, echo = F, message = F, warning = F}
+``` {r initialisation, echo = F, message = F, warning = F}
 options(repos=c(CRAN="http://mirrors.softliste.de/cran/"))
 
 rm(list = ls())
 
-load <- c("magrittr", "dplyr", "xtable", "texreg", 
+load <- c("repmis", "magrittr", "dplyr", "xtable", "texreg", 
           "stargazer", "readxl", "ggplot2", "grid", 
           "captioner", "foreign", "rms", "Zelig", 
           "knitr", "GGally", "gridExtra", 
-          "zoo", "rugarch", "texreg", "dplyr", "magrittr")
+          "zoo", "rugarch")
 
 loaded <- lapply(load, function(x) {
   if(!require(x, character.only = T)) {
@@ -56,7 +52,7 @@ rm(possible_dir) # remove possible_dir vector
 
 # Introduction
 
-As proposed in the research proposal of "Assignment02"(LINK), we want to understand the factors that explain the success and rise of AfD in Germany's political landscape. At the three state elections in Bade-Württemberg, Rhineland-Palatinate, and Saxony-Anhalt, the AfD received double digit results from scratch, meaning that it has not been present in the state parliaments before. In Baden-Württemberg (BW), the party received 15.1%, in Rhineland-Palatinate (RP) 12.6%, and in Saxony-Anhalt (SA) even 24.3% [@BWStateOffice; @RPStateOffice; @SAStateOffice], becoming the third strongest party in BW and RP, and the second strongest in SA.
+As proposed in the research proposal of Assignment02, we want to understand the factors that explain the success and rise of AfD in Germany's political landscape. At the three state elections in Bade-Württemberg, Rhineland-Palatinate, and Saxony-Anhalt, the AfD received double digit results from scratch, meaning that it has not been present in the state parliaments before. In Baden-Württemberg (BW), the party received 15.1%, in Rhineland-Palatinate (RP) 12.6%, and in Saxony-Anhalt (SA) even 24.3%, becoming the third strongest party in BW and RP, and the second strongest in SA.
 
 While our initial attempt was to gather data on constituency level, we had to adapt to available data sources. This is why we changed the level of analysis to the administrative districts of the three German states.
 
@@ -72,61 +68,54 @@ In the following, we present our data collection efforts and initial analysis th
 # Data and Variables
 ```{r echo=F, warning=F, message=F, error=F}
 # Load data file
-source("Analysis.R")
+load("Data.Rda")
 ```
 
 As stated in the Assignment 2 research proposal, we combine two main data types in order to get our variables.
 
-1) The first data type is the electoral data provided by the State Offices for Statistics on the last state elections in  Baden-Württemberg [@BWStateOffice], Rhineland-Palatinate [@RPStateOffice], and Saxony-Anhalt [@SAStateOffice]. The variables retrieved from these datasets are:
+The first data type is the electoral data provided by the State Offices for Statistics on the last state elections in  Baden-Württemberg, Rhineland-Palatinate, and Saxony-Anhalt. The variables retrieved from these datasets are:
 
- - Dependent Variable (DV): vote.AfD
- The vote share of the Alternative for Germany in the current state election
-   
- - Independent Variable 1 (IV1): lag.turnout
- Overall voter turnout of the previous state election
-   
- - IV2, IV3, IV4, IV5, IV6: lag.CDU, lag.Greens, lag.SPD, lag.FDP, lag.Linke
- The vote share of political parties in the previous state election (CDU, SPD, Greens, FDP, and Linke)
- 
+Variable | Name in dataset | Description |
+--------------------|-----------------|-------------------------------|
+Dependent Variable (DV) | **vote.AfD** | The vote share of the Alternative for Germany in the current state election |
+Independent Variable 1 (IV1) | **lag.turnout** | Overall voter turnout of the previous state election                        |
+IV2, IV3, IV4, IV5, IV6 | **lag.CDU**, **lag.Greens**, **lag.SPD**, **lag.FDP**, **lag.Linke** | The vote share of political parties in the previous state election (CDU, SPD, Greens, FDP, and Linke) |
 
-2) The second data type is on the structural characteristics on the administrative districts. We retrieve this data from the Federal Statistical Office DESTATIS [@DESTATIS]. As this data is only available on district level, we adapted our data collection on it. The variables retrieved from these datasets are:
+The second data type is on the structural characteristics on the administrative districts. We retrieve this data from the Federal Statistical Office DESTATIS. As this data is only available on district level, we adapted our data collection on it. The variables retrieved from these datasets are:
 
- - IV7: abitur.ratio 
- Ratio of school leavers per district with general qualification for university entrance (Abitur) 
-  
- - IV8: nodegree.ratio
- Ratio of school leavers per district with no school degree
- 
- - IV9: GDP.cap
- Gross domestic product (GDP) per capita 
- 
- - IV10: unemp.rate
- Unemployment rate in the district
- 
- - IV11: n.refugees
- Number of asylum seekers per district
+Variable | Name in dataset | Description |
+--------------------|-----------------|-------------------------------|
+IV7 | **abitur.ratio**| Ratio of school leavers per district with general qualification for university entrance (Abitur) |
+IV8 | **nodegree.ratio** | Ratio of school leavers per district with no school degree |
+IV9 | **GDP.cap** | Gross domestic product (GDP) per capita | 
+IV10 | **unemp.rate** | Unemployment rate in the district |
+IV11 | **n.refugees** | Number of asylum seekers per district |
 
 
-## Data gathering
+## Data Gathering
 
-*Election Data*
+**Election Data**
+
 Gathering the election data was complicated due to the independence of the Statistical State Offices. Every German state office chooses its own format to provide data online. While we thought about collecting data on all state elections in Germany where the AfD has won seats, we had to limit our efforts to the three states Baden-Württemberg (BW), Rhineland-Palatinate (RP), and Saxony Anhalt (SA) in order to provide a working dataset in the given time frame. However, for the final analysis, we will try to extend our dataset to achieve a greater sample.
 
-We retrieved district level data on the 2016 and 2011 state elections from the respective websites [^Websites]. While the data was available in separate files for RP and SA, district level data was only available for BW in a combined table that had to be divided in following steps. In total, we gathered five different datasets on the elections.
+We retrieved district level data on the 2016 and 2011 state elections from the respective websites. While the data was available in separate files for RP and SA, district level data was only available for BW in a combined table that had to be divided in following steps. In total, we gathered five different datasets on the elections.
 
-*Structural Data*
-The website of the DESTATIS online database "Genesis-Online"[^Genesis] was the source of the structural data files. As DESTATIS does not offer an API, the data had to be manually downloaded from the database. We saved four datasets as csv files that were subsequently loaded into our project. While this is only initial data, the similar structure of DESTATIS data allows us to include further datasets on new variables in case we see the need for that during analysis.
+**Structural Data**
 
-## Data cleaning and merging
+The website of the DESTATIS online database "Genesis-Online" was the source of the structural data files. As DESTATIS does not offer an API, the data had to be manually downloaded from the database. We saved four datasets as csv files that were subsequently loaded into our project. While this is only initial data, the similar structure of DESTATIS data allows us to include further datasets on new variables in case we see the need for that during analysis.
+
+## Data Cleaning and Merging
 The biggest challenge during the data cleaning was the generation of a common identifier for the different dataset. Except for the SA data, the election datasets is not provided with the district key which is the main identifier for the DESTATIS data. In order to add the identifier to the election data, we converted the district names that were available in both the election and the structural DESTATIS data into the same format and structure. Then, we sorted the data frames in the same way to add the identifier to the election data.
 
 Finally, we merged all datasets into a single one which contains the variables mentioned above, the election year, and a state indicator on 94 observations.
 
+\pagebreak
+
 # Empirical Findings
-With the generated dataset we were able to conduct initial analysis of correclations and distributions. While our dependent varialbe is a [0, 1] bounded variable (meaning, the vote share can take values between 0% and 100%), we will use beta regression for our final analysis. For the beginning, we use OLS to get a basic idea of the relationships of the selected variables.
+With the generated dataset we were able to conduct initial analysis of correlations and distributions. While our dependent variable is a [0, 1] bounded variable (meaning, the vote share can take values between 0% and 100%), we will use beta regression for our final analysis. For the beginning, we use OLS to get a basic idea of the relationships of the selected variables.
 
 ## Descriptive Statistics
-Table 1 shows general descriptive statistics of our variables. Except for the "GDP per capita" and "number of refugees" variables they are all in percent. 
+Table 3 shows general descriptive statistics of our variables. Except for the "GDP per capita" and "number of refugees" variables they are all in percent. 
 
 The standard deviations for "GDP per capita" and "vote share of Linke" are particularly large in comparison to the respective means. GDP per capita differs substantially between rural districts and heavily urbanized ones and while the Linke is very strong in Saxony Anhalt, it is barely present in BW and RP.
 
@@ -135,7 +124,7 @@ summary_labels <- c('Vote share of AfD in 2016', 'Vote turnout in 2011',
                     'Vote share of CDU in 2011', 'Vote share of Greens in 2011', 
                     'Vote share of SPD in 2011', 'Vote share of FDP in 2011', 
                     'Vote share of Linke in 2011', 'High school ratio', 
-                    'No school degree ratio', 'GDP per capita', 
+                    'No degree ratio', 'GDP per capita', 
                     'Unemployment rate', 'Number of refugees')
 
 
@@ -146,6 +135,7 @@ font.size = 'small',
 type="latex", header = FALSE)
 ```
 
+\pagebreak
 
 The following graph shows the frequency distribution of "n.refugees" for the observed districts. The distribution shows that there are some outliers when it comes to the number of asylum seekers. We would estimate that these outlier districts are urban districts with higher population density. For further analysis it would be valuable to calculate a "refugees per capita" variable.
 
@@ -161,6 +151,7 @@ ggplot(Data) +
 ```
 
 When lining up the districts according to the vote share of the AfD, it becomes clear that the party achieved an overall stable and even vote share. The only real outliers are a couple of districts in Saxony Anhalt where the AfD achieved its by far greatest successes.
+
 ```{r bar, echo=F, warning=F, message=F, error=F, results='hide', fig.width=13}
 ggplot(Data) +
   geom_bar(aes(y = vote.AfD, x = reorder(district.name, -vote.AfD)), 
@@ -172,9 +163,10 @@ ggplot(Data) +
   theme(axis.text.x = element_text(angle = 90))
 ```
 
+\pagebreak
 
-## Correlations among variables
-Table 2 provides a correlation matrix of a selection of our variables. 
+## Correlations Among Variables
+Table 4 provides a correlation matrix of a selection of our variables. 
 
 It is important to note that the AfD vote share is negatively correlated with the SPD vote share, but only slightly with the CDU vote share. GDP per capita and high school degree ratio are negatively correlated with AfD vote share, while the unemployment rate and the number of refugees are positively correlated with it.
 
@@ -194,15 +186,17 @@ When it comes to IV/IV correlations, the large positive correlation between GDP 
   
 
 ### Correlation of AfD vote share and GDP per capita
-The following graph shows a slightly statistically significant (t value is -2.04) negative coorelation of GDP per capita with AfD vote share. The effect seems to be mostly influenced by a small group of outliers (high vote share, low GDP per capita) and the variance is not equal across the indipendent variable (posing a problem with heteroscedasticity).
+The following graph shows a slightly statistically significant (t value is -2.04) negative correlation of GDP per capita with AfD vote share. The effect seems to be mostly influenced by a small group of outliers (high vote share, low GDP per capita) and the variance is not equal across the independent variable (posing a problem with heteroscedasticity).
 
 ``` {r fig1, echo = F, message = F, results = "hide", error=F, fig.height=4}
 ggplot2::ggplot(Data,aes(log(x = GDP.capita), vote.AfD)) + 
-  xlab("GDP per capita per district (in ???)") +
+  xlab("GDP per capita per district (in Euro)") +
   ylab("AfD vote share (in %)") +
   geom_point() + geom_smooth() + 
   theme_bw()
 ```
+
+\pagebreak
 
 ### Correlation of AfD vote share and unemployment rate
 
@@ -216,10 +210,11 @@ ggplot2::ggplot(Data, aes(log(x = unempl.rate), vote.AfD)) +
   theme_bw()
 ```
 
+\pagebreak
 
 ### Correlation of AfD vote share and number of refugees
 
-The result shows a positive coorelation of the number of refugees per district with the AfD vote share. But it is not statistically significant since the t value is 0.13 (from the Pearson's product-moment correlation test). Since the data on the refugees per district is from 2013, it is highly outdated. We will have to get more recent data (for 2014 or even for 2015) to be able to conduct a meaningful analysis here.
+The result shows a positive correlation of the number of refugees per district with the AfD vote share. But it is not statistically significant since the t value is 0.13 (from the Pearson's product-moment correlation test). Since the data on the refugees per district is from 2013, it is highly outdated. We will have to get more recent data (for 2014 or even for 2015) to be able to conduct a meaningful analysis here.
 
 ``` {r fig3, echo = F, message = F, results = "hide", error=F, fig.height=4}
 ggplot2::ggplot(Data,aes(log(x = n.refugees), vote.AfD)) + 
@@ -229,13 +224,13 @@ ggplot2::ggplot(Data,aes(log(x = n.refugees), vote.AfD)) +
   theme_light()
 ```
 
+\pagebreak
 
-## Inferrential Statistics
+## Inferential Statistics
 Testing some initial regression models, we see that the unemployment rate, the vote share of the SPD in previous elections, and the ratio of people leaving school without a formal degree are statistically significant across all models. In almost each model a one percentage point increase of the unemployment rate leads to a one percentage point increase of the AfD vote share.
 On the other hand, the number of refugees per district and the vote share of the CDU are insignificant in every model.
 
 With just a small initial selection of variables, the models have surprisingly high adjusted R^2. Between 40% and 64% of the variation of AfD vote share could be explained. However, since our current type of analysis (OLS) is not as suited for the analysis of a [0, 1] bounded dependent variable as for example beta regression, these findings are likely to change in our final analysis.
-
 
 ``` {r regout, echo = F, message = F, results = "asis", error=F}
 reg1 <- lm(vote.AfD ~ GDP.capita + unempl.rate + n.refugees, data = Data)
@@ -265,7 +260,3 @@ stargazer::stargazer(reg1, reg2, reg3, reg4,
           font.size = 'small',
           type="latex", header = F)
 ```
-
-# References
-[^Websites: ]
-[^Genesis: ]
