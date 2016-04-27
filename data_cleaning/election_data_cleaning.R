@@ -101,7 +101,7 @@ bw_ID$district.name <- gsub(pattern = ', Landeshauptstadt',
                             x = bw_ID$district.name)
 
 # sort district.names alphabetically
-bw_ID <- arrange(bw_ID, bw_ID$district.name) 
+bw_ID <- arrange(bw_ID, bw_ID$district.name)
 
 # Add ID to bw (as bw amd bw_ID are identically sorted)
 bw$ID <- bw_ID$district.ID 

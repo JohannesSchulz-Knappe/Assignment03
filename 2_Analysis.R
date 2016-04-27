@@ -20,7 +20,7 @@ rm(list = ls())
 ## 1.2 Load packages for data analysis
 
 # Create vector of used packages
-packages <- c("plyr", "dplyr", "xtable", "texreg", "stargazer", 
+packages <- c("repmis", "plyr", "dplyr", "xtable", "texreg", "stargazer", 
               "magrittr", "readstata13", "ggplot2", "reshape")
 
 # Install packages that are not already installed

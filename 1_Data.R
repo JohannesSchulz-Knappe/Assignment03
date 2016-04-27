@@ -30,7 +30,7 @@ for (p in packages) {
     require(p, character.only=TRUE)
   }
 }
-
+rm(p)
 
 # Load packages
 loaded <- lapply(packages, require, character.only = TRUE)
