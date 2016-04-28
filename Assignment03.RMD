@@ -1,5 +1,5 @@
 ---
-title: ""What explains the recent electoral success of the AfD in the different administrative districts of Baden-Württemberg, Rhineland-Palatinate, and Saxony-Anhalt? (Dataset Generation and First Analysis of Empirical Findings of the Proposed Topic)"
+title: "Dataset Generation and Initial Empirical Findings on the Proposed Topic"
 author: "Md Mujahedul Islam & Johannes Schulz-Knappe"
 subtitle: "MPP-E1180 - Hertie School of Governance, Spring 2016"
 date: "April 27, 2016"
@@ -139,7 +139,7 @@ type="latex", header = FALSE)
 
 The following graph shows the frequency distribution of "n.refugees" for the observed districts. The distribution shows that there are some outliers when it comes to the number of asylum seekers. We would estimate that these outlier districts are urban districts with higher population density. For further analysis it would be valuable to calculate a "refugees per capita" variable.
 
-```{r histo, echo=F, warning=F, message=F, error=F, results='hide', fig.height=4}
+```{r histo, echo=F, warning=F, message=F, error=F, results='hide', fig.height=4, fig.cap='Frequency distribution of the number of refugees for the observed districts'}
 ggplot(Data) +
   geom_histogram(aes(x = n.refugees),
                  colour = "black",
@@ -152,7 +152,7 @@ ggplot(Data) +
 
 When lining up the districts according to the vote share of the AfD, it becomes clear that the party achieved an overall stable and even vote share. The only real outliers are a couple of districts in Saxony Anhalt where the AfD achieved its by far greatest successes.
 
-```{r bar, echo=F, warning=F, message=F, error=F, results='hide', fig.width=13}
+```{r bar, echo=F, warning=F, message=F, error=F, results='hide', fig.width=13, fig.cap='Vote share of AfD in the districts of BW, RP, and SA'}
 ggplot(Data) +
   geom_bar(aes(y = vote.AfD, x = reorder(district.name, -vote.AfD)), 
            stat = "identity") +
@@ -188,7 +188,7 @@ When it comes to IV/IV correlations, the large positive correlation between GDP 
 ### Correlation of AfD vote share and GDP per capita
 The following graph shows a slightly statistically significant (t value is -2.04) negative correlation of GDP per capita with AfD vote share. The effect seems to be mostly influenced by a small group of outliers (high vote share, low GDP per capita) and the variance is not equal across the independent variable (posing a problem with heteroscedasticity).
 
-``` {r fig1, echo = F, message = F, results = "hide", error=F, fig.height=4}
+``` {r fig1, echo = F, message = F, results = "hide", error=F, fig.height=4, fig.cap='Correlation of AfD vote share and GDP per capita'}
 ggplot2::ggplot(Data,aes(log(x = GDP.capita), vote.AfD)) + 
   xlab("GDP per capita per district (in Euro)") +
   ylab("AfD vote share (in %)") +
@@ -202,7 +202,7 @@ ggplot2::ggplot(Data,aes(log(x = GDP.capita), vote.AfD)) +
 
 The following graph shows a statistically significant (the t value from the Pearson's product-moment correlation test is 6.27) positive correlation of the logged unemployment rate in a district with the AfD vote share. However, the correlation seems to be negative for districts with lower unemployment rates but becomes strongly positive for districts with high unemployment. The positive correlation of the high school degree ratio with the unemployment rate and its negative correlation with the AfD vote share visible in the correlation matrix could offer a possible explanation for this. We will test this in future analysis with interaction variables.
 
-``` {r fig2, echo = F, message = F, results = "hide", error=F, fig.height=4}
+``` {r fig2, echo = F, message = F, results = "hide", error=F, fig.height=4, fig.cap='Correlation of AfD vote share and unemployment rate'}
 ggplot2::ggplot(Data, aes(log(x = unempl.rate), vote.AfD)) + 
   xlab("Unemployment rate per district (in %)") +
   ylab("AfD vote share (in %)") +
@@ -216,7 +216,7 @@ ggplot2::ggplot(Data, aes(log(x = unempl.rate), vote.AfD)) +
 
 The result shows a positive correlation of the number of refugees per district with the AfD vote share. But it is not statistically significant since the t value is 0.13 (from the Pearson's product-moment correlation test). Since the data on the refugees per district is from 2013, it is highly outdated. We will have to get more recent data (for 2014 or even for 2015) to be able to conduct a meaningful analysis here.
 
-``` {r fig3, echo = F, message = F, results = "hide", error=F, fig.height=4}
+``` {r fig3, echo = F, message = F, results = "hide", error=F, fig.height=4, fig.cap='Correlation of AfD vote share and number of refugees'}
 ggplot2::ggplot(Data,aes(log(x = n.refugees), vote.AfD)) + 
   xlab("Number of refugees per district") +
   ylab("AfD vote share (in %)") +
