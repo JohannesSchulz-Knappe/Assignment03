@@ -1,0 +1,199 @@
+---
+title: "Assignment 3 - Empirical Findings"
+author: "Md Mujahedul Islam & Johannes Schulz-Knappe"
+date: "April 26, 2016"
+output: pdf_document
+subtitle: What explains the recent electoral success of the Alternative for Germany?
+#bibliography: Library.bib
+---
+
+
+``` {r intialisation, echo = F, message = F, warning = F}
+options(repos=c(CRAN="http://mirrors.softliste.de/cran/"))
+
+rm(list = ls())
+
+load <- c("magrittr", "dplyr", "xtable", "texreg", 
+          "stargazer", "readxl", "ggplot2", "grid", 
+          "captioner", "foreign", "rms", "Zelig", 
+          "knitr", "GGally", "gridExtra", 
+          "zoo", "rugarch", "texreg", "dplyr", "magrittr")
+
+loaded <- lapply(load, function(x) {
+  if(!require(x, character.only = T)) {
+    install.packages(x)
+    require(x, character.only = T)
+  }
+})
+rm(load, loaded)
+
+figcap <- captioner(prefix = "Figure", 
+                    auto_space = TRUE, levels = 1, type = NULL)
+tablecap <-captioner(prefix = "Table", 
+                     auto_space = TRUE, levels = 1, type = NULL)
+
+setwd("C:/Users/User/Documents/GitHub/Assignment03")
+```
+
+
+View(Data)
+# Introduction
+
+# Data and Variables
+```{r echo=F, warning=F, message=F, error=F}
+load(".RData")
+```
+
+## Data gathering
+
+
+
+## Data cleaning and merging
+
+# Empirical Findings
+
+
+## Descriptive Statistics
+## Summary Statistics
+Please give a short description of this summary statistics!!!
+```{r sumstat, echo=F, warning=F, message=F, error=F, results='asis'}
+summary_labels <- c('Vote share of AfD', 'Vote turnout in 2011', 
+                        'Vote share of CDU in 2011', 'Vote share of Greens in 2011', 
+                        'Vote share of SPD in 2011', 'Vote share of FDP in 2011', 
+                        'Vote share of Linke in 2011', 'High school ratio', 
+                        'No high school degree', 'GDP per capita', 
+                        'Unemployment rate', 'No. of refugees')
+
+
+stargazer(Data[4:16],
+title = 'Summary statistics of all variables',
+covariate.labels = summary_labels,
+font.size = 'small',
+type="latex", header = F)
+```
+
+```{r histo, echo=F, warning=F, message=F, error=F, results='hide', fig.height=4}
+ggplot(Data) +
+  geom_histogram(aes(x = n.refugees),
+                 colour = "black",
+                 fill = "transparent",
+                 binwidth = 30) +
+  ylab("Frequency") +
+  xlab("No. of refugess in RP, BW, and SA") +
+  theme_light()
+```
+
+
+```{r bar, echo=F, warning=F, message=F, error=F, results='hide', fig.width=13}
+ggplot(Data) +
+  geom_bar(aes(y = vote.AfD, x = reorder(district.name, -vote.AfD)), 
+           stat = "identity") +
+  ylab("AfD's vote share") +
+  xlab("Different consistuencies of RP, BW and SA") +
+  ggtitle("Vote share of AfD in three different states of Germany") +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90))
+  ```
+
+
+
+
+
+\pagebreak
+
+## Correlations among variables
+
+Please give a short description of this correlation matrix!!!
+
+
+```{r corr, echo=F, warning=F, message=F, error=F, results='asis'}
+ correlation.matrix <- cor(Data[,c("vote.AfD","lag.CDU",
+                                    "lag.SPD","GDP.capita",
+                                    "unempl.rate","n.refugees",
+                                    "abitur.ratio")])
+  stargazer(correlation.matrix, 
+            title = "Correlation Matrix of different variables",
+            font.size = 'small',
+            type="latex", header = F)
+```       
+  
+
+### Correlation of AfD's vote share and GDP per capita
+The following figure shows statistically significant (the t value from the Pearson's product-moment correlation test is 6.27) positve correlation of increase in unemployment rate with the increase in AfD's vote share in those three states. 
+
+``` {r fig1, echo = F, message = F, results = "hide", error=F, fig.height=4}
+ggplot2::ggplot(Data,aes(log(x = GDP.capita), vote.AfD)) + 
+  xlab("GDP per capita in RP, BW, and SA") +
+  ylab("AfD's vote share (in %)") +
+  geom_point() + geom_smooth() + 
+  theme_bw()
+```
+
+
+\pagebreak
+
+### Correlation of AfD's vote share and unemployment rate
+The following figure shows statistically significant (t value is -2.04) negative coorelation of increasing Per capita GDP with AfD's vote share. The 
+
+``` {r fig2, echo = F, message = F, results = "hide", error=F, fig.height=4}
+ggplot2::ggplot(Data,aes(log(x = unempl.rate), vote.AfD)) + 
+  xlab("Unemployment rate in RP, BW, and SA") +
+  ylab("AfD's vote share (in %)") +
+  geom_point() + geom_smooth() + 
+  theme_bw()
+```
+
+\pagebreak
+
+### Correlation of AfD's vote share and number of refugees
+
+The result though shows positive coorelation of increased number of refugees with with AfD's vote share, it is not statistically significant since the t value is .13 from the Pearson's product-moment correlation test. 
+
+``` {r fig3, echo = F, message = F, results = "hide", error=F, fig.height=4}
+ggplot2::ggplot(Data,aes(log(x = n.refugees), vote.AfD)) + 
+  xlab("Number of refugees in RP, BW, and SA") +
+  ylab("AfD's vote share (in %)") +
+  geom_point() + geom_smooth() + 
+  theme_light()
+```
+
+
+
+
+
+\pagebreak
+
+## Inferrential Statistics
+
+``` {r regout, echo = F, message = F, results = "asis", error=F}
+reg1 <- lm(vote.AfD ~ GDP.capita + unempl.rate + n.refugees, data = Data)
+reg2 <- lm(vote.AfD ~ GDP.capita + unempl.rate + n.refugees + lag.CDU + 
+             lag.SPD + lag.turnout, data = Data)
+reg3 <- lm(vote.AfD ~ GDP.capita + unempl.rate + n.refugees + 
+             abitur.ratio + nodegree.ratio, data = Data)
+reg4 <- lm(vote.AfD ~ GDP.capita + unempl.rate + n.refugees 
+           + lag.CDU + lag.SPD + lag.turnout + abitur.ratio + 
+             nodegree.ratio, data = Data)
+
+
+var_labels <- c('GDP per capita', 'Unemployment rate', 'No. of Refugees', 
+            'Vote share of CDU in 2011 election',
+            'Vote share of SPD in 2011 election',
+            'High School Ratio', 'University Degree ratio', '(Intercept)')
+
+stargazer::stargazer(reg1, reg2, reg3, reg4,
+          omit = 'as.factor*', 
+          omit.stat = c('f', 'ser'), # to nicely fits on the page
+          out.header = F,
+          title = 'Determinants of vote for the Alternative for Germany',
+          dep.var.labels = 'Vote share of AfD',
+          covariate.labels = var_labels,
+          label = 'AfD_voteshare',
+          add.lines = list(c('District FE?', rep('NO', 4))),
+          font.size = 'small',
+          type="latex", header = F)
+```
+
+
+
+
